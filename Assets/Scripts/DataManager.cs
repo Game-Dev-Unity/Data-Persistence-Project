@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.IO;
 
 public class DataManager : MonoBehaviour
 {
@@ -29,6 +30,21 @@ public class DataManager : MonoBehaviour
     {
         
     }
+    public UserData LoadData()
+    {
+        string path = Application.persistentDataPath + "/savefile.json";
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            UserData userData = JsonUtility.FromJson<UserData>(json);
+            Debug.Log(json);
+            return userData;
+        }
+        else
+        {
+            return null;
+        }
+    }
     public void SaveData(string playerName, string score)
     {
         UserData userData = new UserData();
@@ -36,8 +52,7 @@ public class DataManager : MonoBehaviour
         userData.Score = score;
 
         string json = JsonUtility.ToJson(userData);
-
-        Debug.Log(json);
+        File.WriteAllText(Application.persistentDataPath + "/savefile.json", json);
     }
     public class UserData
     {
